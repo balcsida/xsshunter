@@ -1,0 +1,47 @@
+version: '3.3'
+services:
+
+  database:
+    image: "postgres:alpine"
+    environment:     
+        - POSTGRES_ROOT_PASSWORD=root
+        - POSTGRES_DB=xsshunter
+        - POSTGRES_USER=xsshunter
+        - POSTGRES_PASSWORD=xsshunter
+    volumes:
+      - type: volume
+        source: database-data
+        target: /var/lib/postgresql/data
+
+  api:
+    build:
+        context: ./api
+    ports:
+        - "8888:8888"
+    depends_on:
+        - database
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /usr/src/config.yaml
+
+  gui:
+    build:
+        context: ./gui
+    ports:
+        - "1234:1234"
+    depends_on:
+        - api
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /usr/src/config.yaml
+  webserver:
+    image: "nginx:stable-alpine"
+    ports:
+      - "80:80"
+    depends_on:
+      - gui
+
+volumes:
+  database-data:
