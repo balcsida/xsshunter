@@ -4,10 +4,10 @@ services:
   database:
     image: "postgres:alpine"
     environment:     
-        - POSTGRES_ROOT_PASSWORD=root
-        - POSTGRES_DB=xsshunter
-        - POSTGRES_USER=xsshunter
-        - POSTGRES_PASSWORD=xsshunter
+      - POSTGRES_ROOT_PASSWORD=root
+      - POSTGRES_DB=xsshunter
+      - POSTGRES_USER=xsshunter
+      - POSTGRES_PASSWORD=xsshunter
     volumes:
       - type: volume
         source: database-data
@@ -15,11 +15,11 @@ services:
 
   api:
     build:
-        context: ./api
+      context: ./api
     ports:
-        - "8888:8888"
+      - "8888:8888"
     depends_on:
-        - database
+      - "database"
     volumes:
       - type: bind
         source: ./config.yaml
